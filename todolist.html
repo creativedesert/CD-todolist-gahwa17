@@ -16,12 +16,12 @@
         <div class="panel">
             待辦事項:
             <input type="text" id="input">
-            <button id="add" onclick="addcontent()">新增</button>
+            <button id="add">新增</button>
         </div>
         <div class="list"> 
-            <div class="toDos">
-                <input type="checkbox" class="status">
-                <p>預設</p>
+            <div class="toDos" id="draggable" draggable="true">
+                <input type="checkbox" class="status" id="content">
+                <label for="content">預設</label>
                 <button class="delete">X</button>
             </div>
 
@@ -29,55 +29,50 @@
     </div>
 
     <script>
-        $(document).ready(function(){ 
+        $(document).ready(function(){
+            var i = 0; //i控制label的順序
             $("#add").click(function addcontent(){  //新增事項
-                
-                if(keyCode == 32){
+                var inputValue = $("#input").val();
+                if(inputValue.trim() == ""){ //去掉字符串首尾空格
                     alert("欄位不能為空");
                 }
                 else{
-                var inputValue = $("#input").val();
-                var content =
-                `<div class="toDos">
-                <input type="checkbox" class="status" onclick="done()">
-                <p>${inputValue}</p>
-                <button class="delete" onclick="deletecontent()">X</button></div>`
-
-                $(".list").append(content);
-                // document.getElementById("input").value="";
-                // $("#input").attr("value","");
-                // $("#input").value = "";
-                $("#input").val("");
+                    // for(var i =0;i<i+1;i++){
+                        var content =
+                        `<div class="toDos" id="draggable" draggable="true">
+                        <input type="checkbox" class="status" id="content${i}">
+                        <label for="content${i}">${inputValue}</label>
+                        <button class="delete">X</button></div>`;
+                        i = i+1;
+                        $(".list").append(content);
+                        // document.getElementById("input").value="";
+                        // $("#input").attr("value","");
+                        // $("#input").value = "";
+                        $("#input").val("");
+                    //}
                 }
-                });
+            });    
 
-            // $(".status").click(function done(){ 
-            //     var status = $(this).prop("checked"); //prop回傳true false
-            //     if(status == true){
-            //         $(this).parent().children("p").css({"text-decoration": "line-through"});
-            //     }
-            //     else{
-            //         $(this).parent().children("p").css({"text-decoration": "none"});
-            //     }
-            // });
-
-            $(document).on('click','.status',function(){ //判斷checkbox
+            $(document).on('click','.status',function(e){ //判斷checkbox
                 var status = $(this).prop("checked"); //prop回傳true false
                 if(status == true){
-                    $(this).parent().children("p").css({"text-decoration": "line-through"});
+                    console.log(this);
+                    $(this).parent().children("label").css({"text-decoration": "line-through"});
                 }
                 else{
-                    $(this).parent().children("p").css({"text-decoration": "none"});
+                    console.log(this);
+                    $(this).parent().children("label").css({"text-decoration": "none"});
                 }
             });
-
-            // $(".delete").click(function deletecontent(){ //刪除事項
-            //     $(this).parent().remove();
-            // });
             
             $(document).on('click','.delete',function(){
-            $(this).parent().remove();
+                $(this).parent().remove();
             });
+            
+            $(document).on('click','.delete',function(){
+                $("#draggable").draggable();
+            });
+            
         });
     </script>
 </body>
