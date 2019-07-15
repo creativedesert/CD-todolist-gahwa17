@@ -2,12 +2,9 @@
 <head>
     <link rel="stylesheet" href="todo.css">
     
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.js"
-    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-    crossorigin="anonymous">  
-    </script>
-    
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
     <title>TODOLIST</title>
 </head>
 <body>
@@ -19,7 +16,7 @@
             <button id="add">新增</button>
         </div>
         <div class="list"> 
-            <div class="toDos" id="draggable" draggable="true">
+            <div class="toDos">
                 <input type="checkbox" class="status" id="content">
                 <label for="content">預設</label>
                 <button class="delete">X</button>
@@ -30,28 +27,38 @@
 
     <script>
         $(document).ready(function(){
-            var i = 0; //i控制label的順序
-            $("#add").click(function addcontent(){  //新增事項
+
+            var i = 0; //i控制label的順序，明確刪除底線
+            function addcontent(){ //新增事項的功能
                 var inputValue = $("#input").val();
                 if(inputValue.trim() == ""){ //去掉字符串首尾空格
                     alert("欄位不能為空");
+                    $(".panel").effect("shake");
                 }
                 else{
-                    // for(var i =0;i<i+1;i++){
-                        var content =
-                        `<div class="toDos" id="draggable" draggable="true">
-                        <input type="checkbox" class="status" id="content${i}">
-                        <label for="content${i}">${inputValue}</label>
-                        <button class="delete">X</button></div>`;
-                        i = i+1;
-                        $(".list").append(content);
-                        // document.getElementById("input").value="";
-                        // $("#input").attr("value","");
-                        // $("#input").value = "";
-                        $("#input").val("");
-                    //}
+                    var content =
+                    `<div class="toDos">
+                    <input type="checkbox" class="status" id="content${i}">
+                    <label for="content${i}">${inputValue}</label>
+                    <button class="delete">X</button></div>`;
+                    i = i+1;
+                    $(".list").append(content);
+                    $("#input").val("");
+                    // document.getElementById("input").value="";
+                    // $("#input").attr("value","");
+                    // $("#input").value = "";
                 }
-            });    
+            }
+            
+            $("#add").click(function (){  //新增事項
+                addcontent();
+            });
+
+            $("#input").keydown(function(){
+                if(event.keyCode ==13){
+                    addcontent();
+                }               
+            });
 
             $(document).on('click','.status',function(e){ //判斷checkbox
                 var status = $(this).prop("checked"); //prop回傳true false
@@ -65,12 +72,15 @@
                 }
             });
             
-            $(document).on('click','.delete',function(){
-                $(this).parent().remove();
-            });
-            
-            $(document).on('click','.delete',function(){
-                $("#draggable").draggable();
+            $(document).on('click','.delete',function(e){
+                $(e.currentTarget).parent().toggle("scale",function(){
+                    $(e.currentTarget).parent().remove();
+                });
+                // var display = $(this).parent().css("display");
+                // console.log(display);
+                // if(display == flex){
+                //     $(this).parent().remove();
+                // }            
             });
             
         });
