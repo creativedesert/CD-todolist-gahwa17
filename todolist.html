@@ -9,13 +9,17 @@
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align:center">待辦清單ToDoList</h1>
-        <div class="panel">
-            待辦事項:
-            <input type="text" id="input">
-            <button id="add">新增</button>
+        <h1 style="text-align:center">ToDoList
+        </h1>
+        <div class="wrap">
+            <span id="all">Clear all</span>
+            <span id="done">Clear Done</span>
         </div>
-        <div class="list"> 
+        <div class="panel" style="position: relative">
+            <input type="text" id="input">
+            <button id="add" class="btn">+</button>
+        </div>
+        <div id="list"> 
             <div class="toDos">
                 <input type="checkbox" class="status" id="content">
                 <label for="content">預設</label>
@@ -42,7 +46,7 @@
                     <label for="content${i}">${inputValue}</label>
                     <button class="delete">X</button></div>`;
                     i = i+1;
-                    $(".list").append(content);
+                    $("#list").append(content);
                     $("#input").val("");
                     // document.getElementById("input").value="";
                     // $("#input").attr("value","");
@@ -65,24 +69,33 @@
                 if(status == true){
                     console.log(this);
                     $(this).parent().children("label").css({"text-decoration": "line-through"});
+                    $(this).parent().children(".delete").css({"background-color": "darkgray"}); //刪除按鈕一起變色
+                    $(this).parent().addClass("done"); //當前的toDos加上完成特效
                 }
                 else{
                     console.log(this);
                     $(this).parent().children("label").css({"text-decoration": "none"});
+                    $(this).parent().children(".delete").css({"background-color": ""}); //刪除按鈕顏色變回來
+                    $(this).parent().removeClass("done");
                 }
             });
             
-            $(document).on('click','.delete',function(e){
+            $(document).on('click','.delete',function(e){ //刪除事項+特效
                 $(e.currentTarget).parent().toggle("scale",function(){
                     $(e.currentTarget).parent().remove();
                 });
-                // var display = $(this).parent().css("display");
-                // console.log(display);
-                // if(display == flex){
-                //     $(this).parent().remove();
-                // }            
+            });
+
+            $(document).on('click','#all',function(){ //刪除所有事項
+                $("#list").empty();
+            });
+
+            $(document).on('click','#done',function(){ //刪除所有完成事項
+                // $(".done").remove(); 正常版
+                $(".done").toggle("scale");
             });
             
+
         });
     </script>
 </body>
